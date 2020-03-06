@@ -77,3 +77,63 @@ as defined [here](https://circuitpython.readthedocs.io/en/latest/docs/design_gui
 | ``value``             | bool                  | Digital logic                                                           |
 | ``value``             | int                   | 16-bit Analog value, unit-less                                          |
 | ``weight``            | float                 | grams (g)                                                               |
+
+#### Temperature Service - `0x0100`
+ - **Temperature** - `0x0101`
+Reads the current temperature in degrees Celsius as a 32-bit float. Both readable and notifiable.
+
+#### Accelerometer Service - `0x0200`
+ - **Acceleration** - `0x0201`
+Reads the x, y, and z acceleration values in meters per second squared as 3 signed 32-bit floats. Both readable and notifiable.
+
+#### Light Sensor Service - `0x0300`
+ - **Light Level** - `0x0301`
+Reads the current light level as a 32-bit float. Both readable and notifiable.
+
+#### Gyroscope Service - `0x0400`
+ - **Gyro** - `0x0401`
+Reads the x, y, and z values in radians as 3 signed 32-bit floats. Both readable and notifiable.
+
+#### Magnetometer Service - `0x0500`
+ - **Magnetic** - `0x0501`
+Reads the x, y, and z values in micro-Tesla (uT) as 3 signed 32-bit floats. Both readable and notifiable.
+
+#### Board Button Service - `0x0600`
+ - **Pressed** - `0x0601`
+Reads the state of the buttons and switches as an unsigned 32-bit int.
+   - **bit 0** is the slide switch with `1` representing left and `0` representing right.
+   - **bit 1** is button A with `1` representing a pressed state. 
+   - **bit 2** is button B with `1` representing a pressed state.
+Other bits available for future buttons. Both readable and notifiable.
+
+#### Humidity Sensor Service - `0x0700`
+ - **Humid** - `0x0701`
+Reads the relative humidity in percentage as a 32-bit float. Both readable and notifiable.
+
+#### Barometric Pressure Sensor Service - `0x0800`
+ - **Pressure** - `0x0801`
+Reads the barometric pressure in hectoPascal (hPa) as a 32-bit float. Both readable and notifiable.
+
+#### Addressable Pixel Service - `0x0900`
+General service for any kind of addressable pixels, including WS2812 (NeoPixel), WS2801, APA102 (DotStar),
+etc. It is the client’s responsibility to know the number of colors, color order, etc. and to fill the buffer
+appropriately. The server is only concerned with the electrical protocol.
+
+ - **Pixel Pin** - `0x0901`
+Stores the pin to send data out on as an unsigned 8-bit int. Both readable and writable.
+ - **Pixel Pin Type** - `0x0902`
+Stores the type of pin to send data out on as an unsigned 8-bit int. `0` represents a WS2812 (NeoPixel)
+running at 800Hz and `1` represents SPI-based APA201 (DotStar). More protocols to be added in
+the future. Both readable and writable.
+ - **Pixel Data** - `0x0903`
+Writable-only variable length data that represents the pixel data.
+   - **First part** is an unsigned 16-bit int that represents the byte-index (not pixel-index) for where to start
+writing data into the buffer.
+   - **Second part** is an unsigned 8-bit integer that represents the flags.
+     - **bit 0** is when to write the data with `1` representing to immediately write to pixels and `0` representing
+to not write pixel data yet.
+   - **Third part** is the raw pixel data itself. This is a string of unsigned 8-bit ints with each byte representing the
+red, green, and blue components of each addressable LED. The proper color order depends on the pixels themselves.
+
+ - **Pixel Buffer Size** - `0x0904`
+Stores the buffer size in bytes needed to hold data for entire pixel string as an unsigned 16-bit int. Both readable and writable.
