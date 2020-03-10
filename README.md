@@ -84,7 +84,7 @@ Reads the current temperature in degrees Celsius as a 32-bit float. Both readabl
 
 #### Accelerometer Service - `0x0200`
  - **Acceleration** - `0x0201`
-Reads the x, y, and z acceleration values in meters per second squared as 3 signed 32-bit floats. Both readable and notifiable.
+Reads the x, y, and z acceleration values in meters per second squared as three 32-bit floats. Both readable and notifiable.
 
 #### Light Sensor Service - `0x0300`
  - **Light Level** - `0x0301`
@@ -92,11 +92,11 @@ Reads the current light level as a 32-bit float. Both readable and notifiable.
 
 #### Gyroscope Service - `0x0400`
  - **Gyro** - `0x0401`
-Reads the x, y, and z values in radians as 3 signed 32-bit floats. Both readable and notifiable.
+Reads the x, y, and z values in radians as three 32-bit floats. Both readable and notifiable.
 
 #### Magnetometer Service - `0x0500`
  - **Magnetic** - `0x0501`
-Reads the x, y, and z values in micro-Tesla (uT) as 3 signed 32-bit floats. Both readable and notifiable.
+Reads the x, y, and z values in micro-Tesla (uT) as three 32-bit floats. Both readable and notifiable.
 
 #### Board Button Service - `0x0600`
  - **Pressed** - `0x0601`
@@ -137,3 +137,44 @@ red, green, and blue components of each addressable LED. The proper color order 
 
  - **Pixel Buffer Size** - `0x0904`
 Stores the buffer size in bytes needed to hold data for entire pixel string as an unsigned 16-bit int. Both readable and writable.
+
+#### Color Sensor Service - `0x0A00`
+ - **Color** - `0x0A01`
+Reads the Red, Green, and Blue values in radians as three unsigned 16-bit ints. Both readable and notifiable.
+
+#### Sound (Microphone) Service - `0x0B00`
+ - **Sound Samples** - `0x0B01`
+ Reads the level sample values as an array of signed 16-bit ints. The length of this field varies by the sampling
+ period. Both readable and notifiable.
+ - **Number of Channels** - `0x0B02`
+ Reads the number of channels as an unsigned 8-bit integer. Readable only.
+
+#### Tone Service - `0x0C00`
+ - **Tone** - `0x0C01`
+ Instructs the device what frequency to play for the specified duration. Writable only.
+    - **First part** is an unsigned 16-bit int that represents the frequency on hertz. Use 0 for no tone.
+    - **Second part** is an unsigned 32-bit integer that represents the duration in milliseconds. Use 0 for non-stop.
+
+#### Quaternion Service - `0x0D00`
+ - **Quaternions** - `0x0D01`
+Reads the W, X, Y, and Z quaternion values expressed as four 32-bit floats. Both readable and notifiable.
+ - **Calibration In** - `0x0D02`
+Reads the calibration data for the accelerometer, gyroscope, and magnetometer. The data is returned as nine 32-bit floats. 
+Accel + Gyro + Magnetic data should only enable when performing sensor calibration and disable when done. Both 
+readable and notifiable.
+   - **First part** is three 32-bit floats representing the accelerometer's X, Y, and Z stored calibration values.
+   - **Second part** is three 32-bit floats representing the gyroscope's X, Y, and Z stored calibration values.
+   - **Third part** is three 32-bit floats representing the magnetometer's X, Y, and Z stored calibration values.
+ - **Calibration Out** - `0x0D03`
+Writeable only field with the calibration data for the accelerometer, gyroscope, and magnetometer. Calibrated data
+is computed by mobile and written to nRF52 for saving to flash as result for calibration process. The expected data
+is in the following parts:
+   - **First part** is three 32-bit floats representing the accelerometer's **accel_zerog** values.
+   - **Second part** is three 32-bit floats representing the gyroscope's **gyro_zerorate** values.
+   - **Third part** is three 32-bit floats representing the magnetometer's **mag_hardiron** values.
+   - **Fourth part** is one 32-bit float representing the magnetometer's **mag_field** value.
+   - **Fifth part** is nine 32-bit floats representing the magnetometer's **mag_softiron** values.
+
+#### Proximity Service - `0x0E00`
+ - **Proximity** - `0x0E01`
+ Reads the proximity as an unsigned 16-bit int. The higher number the closer object to sensor. Both readable and notifiable.
