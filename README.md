@@ -14,16 +14,23 @@ and apps to work over BLE. This repo documents the BLE protocols used by this sa
 The Bluetooth Special Interest Group (SIG for short) administers identifiers used in the protocol
 by individual companies.
 
-Adafruit's Service UUID is **`0xfebb`**. (Confirm [here](https://www.bluetooth.com/specifications/assigned-numbers/16-bit-uuids-for-members/)) It is currently unused.
+Adafruit's Service UUID is **`0xfebb`**. (Confirm [here](https://www.bluetooth.com/specifications/assigned-numbers/16-bit-uuids-for-members/)) It is used for the File Transfer Protocol documented [here](https://github.com/adafruit/Adafruit_CircuitPython_BLE_File_Transfer).
 
 Adafruit's Company ID is **`0x0822`**. (Confirm [here](https://www.bluetooth.com/specifications/assigned-numbers/company-identifiers/)) It is used in the manufacturer data field in advertisments. More info below.
 
 ### Base UUID
 
+#### Adafruit
 Adafruit's 128-bit Universally Unique Identifiers (UUID) all share a base UUID. This saves memory in
 some BLE stacks because the base UUID is deduplicated.
 
 Adafruit's base UUID is **`ADAFxxxx-C332-42A8-93BD-25E905756CB8`** where the four `xxxx` are replaced with the 16-bit IDs used below.
+
+#### CircuitPython
+CircuitPython's base UUID is **`ADAFxxxx-4369-7263-7569-74507974686E`** where the four `xxxx` are replaced with the 16-bit IDs used below. 
+
+#### File Transfer
+The file transfer service has a base UUID for all characteristics that is **`ADAFxxxx-4669-6C65-5472-616E73666572`** where the four `xxxx` are replaced with the 16-bit IDs documented for [the File Transfer Service](https://github.com/adafruit/Adafruit_CircuitPython_BLE_File_Transfer).
 
 ## Advertising
 
@@ -178,3 +185,18 @@ is in the following parts:
 #### Proximity Service - `0x0E00`
  - **Proximity** - `0x0E01`
  Reads the proximity as an unsigned 16-bit int. The higher number the closer object to sensor. Both readable and notifiable.
+
+### CircuitPython Service
+This service customizes the Nordic UART Service (NUS) for CircuitPython specifically. It uses the CircuitPython base UUID above and the 16-bit ID `0x0001`.
+
+#### RX Characteristic - `0x0002`
+
+NUS compatible RX characteristic.
+
+#### TX Characteristic - `0x0003`
+
+NUS compatible TX characteristic.
+
+#### Version Characteristic - `0x0100`
+
+This is a new characteristic that returns the full build version of CircuitPython as a string without a null termination. One example of the value is `7.0.0-beta.0-163-gcc0a6c8a5-dirty`. Release tagged versions will be much shorter. This can be used to determine the version of the service itself too because it is tied to CircuitPython.
